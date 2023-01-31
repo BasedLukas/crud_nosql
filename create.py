@@ -1,5 +1,7 @@
 import db_tools
 import templates
+import uuid
+
 
 server = db_tools.server
 db = db_tools.db
@@ -30,16 +32,26 @@ def append_to_list(data: dict,  document:object, doc_location:list ): # the loca
 #     print(document[doc_location])
 #     document[doc_location] = data
 #     print(document[doc_location])
-
+def create_product():
+    product = templates.Product()
+    product.name = input("Enter product name: ")
+    product.price = float(input("enter the product price (Numbers only)"))
+    product.barcode = str(uuid.uuid1().int)
+    dict = product.format_dict()
+    print(dict)
+    append_to_list(dict, main_doc, main_doc["Product"])
 def create_student():
     student = templates.Student()
-    student.id = "id" #TODO add unique ids
+    student.id = str(uuid.uuid1().int)
     student.name = input("Enter student name: ")
     student.email = input("Enter student email: ")
     #TODO Add studies, make it possible to have multiple studies
     student.address = {"street":input("Enter street: "),"house":input("Enter house number: "),"postal_code":input("Enter postal code: ")}
     dict = student.format_dict()
-    print(dict)
+    print("The following data has been added", dict)
+    x = append_to_list(dict, main_doc,main_doc["Student"])
+
+
 
 def create_master_data():
     options= ["student", "studies", "address", "product", "event", "go back"]
@@ -50,34 +62,38 @@ def create_master_data():
         if selection == "0":
             create_student()
         if selection == "1":
-            pass
+            print("This functionality has not yet been added")
             #TODO add this menu option
         if selection =="2":
-            pass
+            print("This functionality has not yet been added")
             # TODO add this menu option
         if selection == "3":
-            pass
+            create_product()
             # TODO add this menu option
         if selection == "4":
-            pass
+            print("This functionality has not yet been added")
             # TODO add this menu option
         if selection == "5":
             return
 
 
 
-def create_transaction(student_name:str, event:dict, product_name:str, quantity:int, datetime:str):
+def create_transaction():
     #TODO implement proper way to view and search
-    student = db_tools.search_students_by_name(student_name)
-    # event = {"key": "value"}
+    student_name = input("enter student name ")
+    product_name = input("Enter product name ")
+    student_index = db_tools.search_students_by_name(student_name)
+    student = main_doc["Student"][student_index]
+    event = {"key": "value"}
     product = db_tools.search_products_by_name(product_name)
-    # quantity = 4
-    # datetime = "some date time 1234"
+    quantity = int(input("number purchased "))
+    datetime = input("date purchased ")
     dict = templates.Transaction(student, event,product, quantity, datetime).format_transaction()
-    print(dict)
+
     db_response = append_to_list(dict, transactions, transactions["purchases"] )
     #TODO verify response
 
+1
 
 def create_main_menu():
     print("\nHere you can create master data and transactions")

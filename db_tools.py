@@ -28,15 +28,17 @@ def post_request(url:str, data, headers):
 
 
 # these functions below are used to fetch master data to be used when crafting transactions
-def search_students_by_name(name:str)->dict:
-    #TODO implement map reduce server side to properly search db
-    for i in main_doc["students"]:
-        if name.upper() == i["name"].upper():
-            return i
+def search_students_by_name(name:str)->int:
+    #TODO implement proper search
+    for key, value in enumerate(main_doc["Student"]):
+        print(key,value, value["name"])
+        if name.upper().strip() == value["name"].upper().strip():
+            return key
+
 
 def search_products_by_name(name:str)->dict:
-    #TODO implement map reduce server side to properly search db
-    for i in main_doc["products"]:
+    #TODO implement map reduce server side to properly search db, standardize search etc
+    for i in main_doc["Product"]:
         if name.upper() == i["name"].upper():
             return i
 

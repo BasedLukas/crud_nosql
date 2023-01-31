@@ -35,6 +35,9 @@ class Product:
     name:str=None
     price:float=None
     barcode:str=None
+    def format_dict(self):
+        dict= {"name": self.name, "price": self.price, "barcode": self.barcode}
+        return dict
 @dataclass
 class Event:
     date:str=None

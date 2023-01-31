@@ -1,14 +1,13 @@
 import db_tools
+import templates
+import uuid
+
 
 server = db_tools.server
 db = db_tools.db
 transactions = db_tools.transactions
 main_doc = db_tools.main_doc
 
-# sample data to add to db
-student = {"name": "Aimee", "email": "Aimee.Stroink@hva.nl", "birth_day": "01-01-2000"}
-beer = {"name": "dry martini", "price": "75", "barcode": "bond"}
-my_list = [1,2]
 
 # Edit any list index in the doc
 def edit_list(data: any,  document:object, doc_location:str, index:int ):
@@ -24,8 +23,21 @@ def edit_list(data: any,  document:object, doc_location:str, index:int ):
 def edit_student():
     name = input("enter the name of the student you wish to edit: ")
     student = db_tools.search_students_by_name(name)
-    data = "add a method to edit the data"
-    edit_list(data, main_doc, main_doc["students"], 0)
+    if student is None:
+        print("Not found")
+        return
+    def create_student():
+        student = templates.Student()
+        student.id = str(uuid.uuid1().int)
+        student.name = input("Enter student name: ")
+        student.email = input("Enter student email: ")
+        # TODO Add studies, make it possible to have multiple studies
+        student.address = {"street": input("Enter street: "), "house": input("Enter house number: "),
+                           "postal_code": input("Enter postal code: ")}
+        dict = student.format_dict()
+        return dict
+    data = create_student()
+    edit_list(data, main_doc, "Student", student)
 
 def update_main_menu():
     print("You can edit any of the following data: ")
@@ -37,9 +49,9 @@ def update_main_menu():
         if selection == "q":
             quit()
         if selection == "0":
-            pass
+            print("not yet available")
         if selection == "1":
-            pass
+            edit_student()
         if selection == "2":
             pass
         if selection == "3":
